@@ -1,0 +1,105 @@
+{% load static %}
+<!doctype html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="پروفایل کاربر وبلاگ" />
+  <title>پروفایل کاربری | وبلاگ مینیمال</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}" />
+</head>
+
+<body>
+  <main class="container profile-container">
+    <header class="header profile-header">
+      <a class="logo" href="list.html" aria-label="صفحه اصلی وبلاگ">وبلاگ</a>
+      <p class="subtitle">مدیریت اطلاعات کاربری</p>
+    </header>
+
+    <section class="profile-card" aria-labelledby="profile-title">
+      <div class="profile-heading">
+        <p class="eyebrow">حساب کاربری</p>
+        <h1 id="profile-title">پروفایل من</h1>
+        <p>اطلاعات خود را وارد یا ویرایش کنید.</p>
+      </div>
+
+      <form class="profile-form" action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="avatar-upload">
+          <div class="profile-avatar" aria-hidden="true">+</div>
+          <div>
+            <label for="profile-image">تصویر پروفایل</label>
+            <input id="profile-image" name="image" type="file" accept="image/png, image/jpeg, image/webp" />
+            <small>فرمت‌های مجاز: JPG، PNG و WEBP</small>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="first-name">نام</label>
+            {% if user_profile.first_name %}
+
+            <input id="first-name" name="first_name" value="{{ user_profile.first_name }}" type="text" required />
+          </div>
+          {% else %}
+          <input id="first-name" name="first_name" type="text" placeholder="نام خود را وارد کنید" required />
+        </div>
+        {% endif %}
+        {% if user_profile.last_name %}
+        <div class="form-field">
+          <label for="last-name">نام خانوادگی</label>
+          <input id="last-name" name="last_name" value="{{ user_profile.last_name }}" type="text" required />
+        </div>
+        {% else %}
+        <div class="form-field">
+          <label for="last-name">نام خانوادگی</label>
+          <input id="last-name" name="last_name" type="text" required />
+        </div>
+        {% endif %}
+
+        </div>
+        {% if user_profile.email %}
+        <div class="form-field">
+          <label for="profile-email">ایمیل</label>
+          <input id="profile-email" name="email" value="{{ user_profile.email }}" type="email" dir="ltr"
+            autocomplete="email" />
+        </div>
+        {% else %}
+        <div class="form-field">
+          <label for="profile-email">ایمیل</label>
+          <input id="profile-email" name="email" type="email" dir="ltr" autocomplete="email" />
+        </div>
+        {% endif %}
+
+        <div class="form-field">
+          <label for="bio">درباره من</label>
+          <textarea id="bio" name="bio" rows="5" maxlength="300"
+            placeholder="چند جمله درباره خودتان بنویسید...">{{ user_profile.bio }}</textarea>
+        </div>
+
+        <div class="profile-actions">
+          <button type="submit">ذخیره اطلاعات</button>
+          <a class="back-link" href="list.html">بازگشت به صفحه اصلی</a>
+        </div>
+      </form>
+    </section>
+  </main>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  {% if messages %}
+  {% for message in messages %}
+  Swal.fire({
+    title: "{{ message.tags|capfirst }}",
+    text: "{{ message }}",
+    icon: "{{ message.tags }}",
+    confirmButtonText: "باشه"
+  });
+  {% endfor %}
+  {% endif %} 
+</script>
+
+
+</html>

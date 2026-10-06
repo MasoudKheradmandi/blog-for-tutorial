@@ -8,7 +8,7 @@ class CustomUserManager(BaseUserManager):
         if not phone_number:
             raise ValueError("User Must Phone Number")
         
-        user = self.model(phone_number=phone_number,**extra_fields)
+        user:User= self.model(phone_number=phone_number,**extra_fields)
         user.set_unusable_password()
         user.save(using=self._db)
         return user
@@ -45,3 +45,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     def __str__(self):
         return self.phone_number
+    
+class Profile(models.Model):
+    user = models.OneToOneField('User',on_delete=models.PROTECT)
+    image = models.ImageField(null=False,blank=True)
+    first_name =models.CharField(max_length=254,null=True,blank=True)
+    last_name = models.CharField(max_length=254,null=True,blank=True)
+    email = models.EmailField(blank=True,null=True)
+    bio = models.TextField(null=True,blank=True) 
+    
+    def __str__(self):
+        return f"{self.email} / {self.user.phone_number}"
